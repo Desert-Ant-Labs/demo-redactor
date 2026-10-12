@@ -1,0 +1,8 @@
+.DS_Store
+*.xcodeproj/
+App/Info.plist
+build*/
+.build/
+.swiftpm/
+dist/
+mise.local.toml

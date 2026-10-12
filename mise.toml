@@ -1,0 +1,63 @@
+[settings]
+experimental = true
+
+[tools]
+xcodegen = '2.45.3'
+
+[tasks.generate]
+description = 'Generate Redactor.xcodeproj from project.yml'
+run = 'xcodegen generate'
+
+[tasks.xcode]
+description = 'Generate the project and open it in Xcode'
+depends = ['generate']
+run = """
+nohup "$(xcode-select -p)/../MacOS/Xcode" Redactor.xcodeproj >/dev/null 2>&1 &
+echo "📂 Opening Redactor.xcodeproj"
+"""
+
+[tasks.build]
+description = 'Build the app, signed with your certificate when REDACTOR_TEAM_ID is set'
+depends = ['generate']
+run = """
+set -o pipefail
+ARGS=(-project Redactor.xcodeproj -scheme Redactor
+      -configuration Release -destination 'platform=macOS,arch=arm64'
+      -derivedDataPath build ARCHS=arm64)
+
+# macOS ties the Accessibility grant to the code signature. An ad hoc build
+# gets a new signature every time, so the grant is lost on every rebuild.
+if [ -n "${REDACTOR_TEAM_ID:-}" ]; then
+    echo "🔏 Signing with team $REDACTOR_TEAM_ID"
+    ARGS+=(DEVELOPMENT_TEAM="$REDACTOR_TEAM_ID" CODE_SIGN_STYLE=Automatic -allowProvisioningUpdates)
+else
+    echo "🔏 No REDACTOR_TEAM_ID, signing to this machine only. Accessibility resets on every build."
+fi
+
+xcodebuild "${ARGS[@]}" build | grep -E 'error:|warning:|BUILD' || true
+echo "📦 build/Build/Products/Release/Redactor.app"
+"""
+
+[tasks.run]
+description = 'Build and open the app'
+depends = ['build']
+run = 'open "build/Build/Products/Release/Redactor.app"'
+
+[tasks.test]
+description = 'Run the tests over the shared sources'
+depends = ['generate']
+run = """
+set -o pipefail
+xcodebuild -project Redactor.xcodeproj -scheme RedactorTests \
+    -destination 'platform=macOS,arch=arm64' \
+    -derivedDataPath build ARCHS=arm64 \
+    test | grep -E 'error:|Test run|Suite .* (passed|failed)|\\*\\* TEST' || true
+"""
+
+[tasks.package]
+description = 'Build, sign, notarize, and wrap the app in a disk image'
+run = 'Scripts/package.sh'
+
+[tasks.clean]
+description = 'Remove build products and the generated project'
+run = 'rm -rf build dist Redactor.xcodeproj'
