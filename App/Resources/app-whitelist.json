@@ -1,0 +1,20 @@
+{
+  "Passwords": {
+    "1Password": "com.1password.1password",
+    "Passwords": "com.apple.Passwords",
+    "Keychain Access": "com.apple.keychainaccess",
+    "Bitwarden": "com.bitwarden.desktop"
+  },
+  "Terminals": {
+    "Terminal": "com.apple.Terminal",
+    "iTerm": "com.googlecode.iterm2",
+    "Ghostty": "com.mitchellh.ghostty",
+    "Warp": "dev.warp.Warp-Stable",
+    "cmux": "com.cmuxterm.app"
+  },
+  "Code editors": {
+    "Xcode": "com.apple.dt.Xcode",
+    "Visual Studio Code": "com.microsoft.VSCode",
+    "Zed": "dev.zed.Zed"
+  }
+}

@@ -33,6 +33,13 @@ final class RedactorModel {
         }
     }
 
+    var checksFiles = UserDefaults.standard.object(forKey: "checksFiles") as? Bool ?? true {
+        didSet {
+            UserDefaults.standard.set(checksFiles, forKey: "checksFiles")
+            watcher.checksFiles = checksFiles
+        }
+    }
+
     enum Mode: String, CaseIterable {
         /// Copies are redacted as they land; copying again keeps the original.
         case redact
@@ -56,6 +63,22 @@ final class RedactorModel {
                 break
             }
         }
+    }
+
+    var watchedApps = AppList.watched.stored {
+        didSet { AppList.watched.store(watchedApps) }
+    }
+
+    var ignoredApps = AppList.ignored.stored {
+        didSet {
+            AppList.ignored.store(ignoredApps)
+            watcher.ignoredApps = ignoredApps
+        }
+    }
+
+    /// Scans read it straight from UserDefaults.
+    var skippedKinds = Finding.Kind.skipped {
+        didSet { UserDefaults.standard.set(skippedKinds.map(\.rawValue).sorted(), forKey: Finding.Kind.skippedKey) }
     }
 
     /// Scans read it straight from UserDefaults.
@@ -92,9 +115,11 @@ final class RedactorModel {
         let redact = Redact()
         self.redact = redact
         watcher = ClipboardWatcher { text in
-            Finding(try await Chunking.detect(in: text, using: redact, options: RedactorModel.options), allowing: .stored)
+            Finding(try await Chunking.detect(in: text, using: redact, options: RedactorModel.options), allowing: .stored, skipping: Finding.Kind.skipped)
         }
         watcher.checksImages = checksImages
+        watcher.checksFiles = checksFiles
+        watcher.ignoredApps = ignoredApps
         watcher.onScan = { [weak self] in self?.didScan($0) }
         tap.handle = { [weak self] in self?.handle($0) ?? false }
         warning.onChoice = { [weak self] in self?.resolve($0) }
@@ -183,7 +208,7 @@ extension RedactorModel {
 
         guard key.isPaste, mode != .off, isChecking,
               let app = NSWorkspace.shared.frontmostApplication,
-              Watchlist.contains(app.bundleIdentifier)
+              let bundleIdentifier = app.bundleIdentifier, watchedApps.contains(bundleIdentifier)
         else { return false }
 
         watcher.checkNow()

@@ -33,5 +33,7 @@ clipboard holds personal data.
   names in long text, so text goes in as sentence chunks of 150 characters.
 - **A copied file stays a file.** Only text copies are redacted on their own;
   a file is swapped for its text only when the user asks.
+- **The default app lists are data.** `App/Resources/app-watchlist.json` and
+  `app-whitelist.json` map app names to bundle IDs; edit those, not code.
 - **`Redactor.xcodeproj` is generated.** Edit `project.yml` and rerun
   `xcodegen generate`.

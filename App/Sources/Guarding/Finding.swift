@@ -17,7 +17,7 @@ struct Finding: Equatable, Sendable {
 
     /// What a person calls each kind of data. Redact reports an address as
     /// several spans; a person sees one address.
-    enum Kind: CaseIterable, Sendable {
+    enum Kind: String, CaseIterable, Sendable {
         case name, address, email, phone, card, bankAccount, id, ipAddress, imei
 
         init?(_ label: Label) {
@@ -56,6 +56,16 @@ struct Finding: Equatable, Sendable {
             case .ipAddress: "IP addresses"
             default: singular + "s"
             }
+        }
+
+        /// "Phone numbers", as a setting.
+        var title: String { plural.prefix(1).uppercased() + plural.dropFirst() }
+
+        /// The kinds the user turned off in Settings. Read on every scan, off
+        /// the main actor; UserDefaults is thread-safe.
+        static let skippedKey = "skippedKinds"
+        static var skipped: Set<Kind> {
+            Set((UserDefaults.standard.stringArray(forKey: skippedKey) ?? []).compactMap(Kind.init(rawValue:)))
         }
     }
 
@@ -124,18 +134,20 @@ struct Finding: Equatable, Sendable {
         values = kept.map(\.item.original)
     }
 
-    /// Builds the finding from Redact's result, minus the user's own details.
+    /// Builds the finding from Redact's result, minus the user's own details
+    /// and the kinds they turned off.
     ///
     /// Redact reports an email inside a link as part of one URL span, and
     /// links are left alone, so the email would go through. Sweeping the
     /// redacted text for emails afterwards catches those and leaves the rest
     /// of the link working.
-    init(_ redaction: Chunking.Detection, allowing allowlist: Allowlist = Allowlist([])) {
+    init(_ redaction: Chunking.Detection, allowing allowlist: Allowlist = Allowlist([]), skipping skipped: Set<Kind> = []) {
         var text = redaction.redactedText
         var items: [(label: Label, original: String)] = []
         let hasAddress = redaction.items.contains { [.streetName, .city].contains($0.label) }
         for item in redaction.items {
-            if allowlist.allows(item.original, as: item.label) || Self.isCode(item, hasAddress: hasAddress) {
+            if allowlist.allows(item.original, as: item.label) || Self.isCode(item, hasAddress: hasAddress)
+                || Kind(item.label).map(skipped.contains) == true {
                 text = text.replacingOccurrences(of: item.placeholder, with: item.original)
             } else {
                 items.append((item.label, item.original))
@@ -144,7 +156,9 @@ struct Finding: Equatable, Sendable {
         // Numbered past every email Redact found, allowed ones included, so a
         // swept email never reuses a placeholder already in the text.
         let emails = redaction.items.count { $0.label == .email }
-        let swept = Self.sweepEmails(in: text, numberingFrom: emails + 1, allowing: allowlist)
+        let swept = skipped.contains(.email)
+            ? (text: text, emails: [])
+            : Self.sweepEmails(in: text, numberingFrom: emails + 1, allowing: allowlist)
         items += swept.emails.map { (.email, $0) }
         self.init(items: items, redactedText: swept.text)
     }

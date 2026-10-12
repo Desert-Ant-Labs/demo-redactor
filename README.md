@@ -1,10 +1,10 @@
 # Redactor
 
-Redact personal data in what you copy on your Mac, before it reaches a chat,
-AI, or email app. Redactor runs [Redact](https://desertant.com/models/redact/)
+Redact personal data when you copy or paste on your Mac, before it reaches a
+chat, AI, or email app. Redactor runs [Redact](https://desertant.com/models/redact/)
 on your Mac, so nothing you copy leaves it.
 
-![The Redactor pill after a copy: Redacted 1 name, 1 email, and 1 phone number](docs/screenshots/pill-redacted.png)
+<img src="docs/screenshots/pill-redacted.png" width="638" alt="The Redactor pill after a copy: Redacted 1 name, 1 email, and 1 phone number">
 
 ## Install
 
@@ -13,9 +13,9 @@ brew tap desert-ant-labs/tap
 brew install --cask redactor
 ```
 
-Homebrew 6 asks you to approve a tap it has not seen before. Answering that
-prompt covers Redactor, and `brew trust desert-ant-labs/tap` covers anything
-Desert Ant publishes later.
+Homebrew 6 asks you to approve a tap when you add it first. Answering that
+prompt covers Redactor, and `brew trust desert-ant-labs/tap` covers
+anything Desert Ant publishes later.
 
 Or download the [disk image](https://github.com/Desert-Ant-Labs/demo-redactor/releases/latest)
 and drag Redactor to Applications. Redactor works on macOS 26 or later on Apple
@@ -33,11 +33,29 @@ Silicon. Redact (12MB) downloads on first launch.
 - **Copy a file** in Finder, and Redactor reads it: text, CSV, Word, PDF, and
   images. A file stays a file until you click Redact.
 
-![The Redactor menu with the Redact, Warn, and Off switch](docs/screenshots/menu.png)
+<img src="docs/screenshots/menu.png" width="366" alt="The Redactor menu with the Redact, Warn, and Off switch">
 
-Switch between Redact, Warn, and Off in the menu. Warn tells you what it found
-and leaves the copy as it is. Add your own email, phone number, and name to the
-whitelist in Settings, and Redactor never flags them.
+## Settings
+
+### Copy
+
+- **Mode**: Redact, Warn, or Off, also in the menu. Warn tells you what it
+  found and leaves the copy as it is.
+- **Check images**: blur personal data in screenshots and images you copy.
+- **Check files**: read files you copy in Finder for personal data.
+- **Personal data**: the kinds Redactor redacts and warns about, like names,
+  addresses, and card numbers. All 9 are on by default.
+- **Whitelist**: what Redactor leaves alone. Copies from apps like password
+  managers and terminals are never read, and your own email, phone number,
+  and name are never flagged. The default apps are in
+  [`App/Resources/app-whitelist.json`](App/Resources/app-whitelist.json).
+
+### Paste
+
+- **Warn before pasting**: stop a paste with personal data into an app on the
+  watchlist.
+- **Watchlist**: the apps where Redactor checks what you paste. The defaults
+  are in [`App/Resources/app-watchlist.json`](App/Resources/app-watchlist.json).
 
 ## Permissions
 
@@ -49,7 +67,10 @@ whitelist in Settings, and Redactor never flags them.
 
 - Only Command V is checked. Paste from the Edit menu, or dragging a file into
   an app, goes through.
-- Terminals and code editors are not watched.
+- Pastes into terminals and code editors are not checked by default.
+- Card numbers, IBANs, and national ID numbers only count when their check
+  digits are right, so a made-up number like 1234 5678 9012 3456 goes through.
+  To try Redactor, use a test card number from your payment provider.
 - Redact misses some names. Check anything sensitive before you share it.
 
 ## Build from source

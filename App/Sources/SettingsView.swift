@@ -1,16 +1,12 @@
+import AppKit
 import SwiftUI
 
 struct SettingsView: View {
     @Bindable var model: RedactorModel
 
     var body: some View {
-        VStack(spacing: 0) {
-            ModelCard()
-                .padding([.horizontal, .top], 20)
-            settings
-        }
-        .frame(width: 480)
-        .fixedSize(horizontal: false, vertical: true)
+        settings
+            .frame(width: 480, height: 760)
     }
 
     private var settings: some View {
@@ -20,21 +16,29 @@ struct SettingsView: View {
                     ForEach(RedactorModel.Mode.allCases, id: \.self) { Text($0.title).tag($0) }
                 }
                 .pickerStyle(.menu)
-                Toggle("Warn before pasting", isOn: $model.isChecking)
-                Toggle("Check screenshots", isOn: $model.checksImages)
+                Toggle("Check images", isOn: $model.checksImages)
+                Toggle("Check files", isOn: $model.checksFiles)
+                KindsRow(skipped: $model.skippedKinds)
+                ListRow(list: .ignored, apps: $model.ignoredApps, values: $model.allowlist)
             } header: {
-                Text("Clipboard")
+                // In the header, so the card scrolls away with the settings.
+                VStack(alignment: .leading, spacing: 20) {
+                    ModelCard()
+                    Text("Copy")
+                }
             } footer: {
-                Text("Redact replaces personal data with placeholders like [EMAIL_1]. Warn only tells you. Screenshots get the personal data blurred.")
+                Text("Redact replaces personal data with placeholders like [EMAIL_1]. Warn only tells you.")
                     .foregroundStyle(.secondary)
             }
 
             Section {
-                AllowlistEditor(values: $model.allowlist)
+                Toggle("Warn before pasting", isOn: $model.isChecking)
+                ListRow(list: .watched, apps: $model.watchedApps)
+                    .disabled(!model.isChecking)
             } header: {
-                Text("Whitelist")
+                Text("Paste")
             } footer: {
-                Text("Redactor leaves these alone. Separate values with a comma. Phone numbers match with or without the country code.")
+                Text("Redactor stops a paste of personal data into an app on the watchlist until you choose what to paste.")
                     .foregroundStyle(.secondary)
             }
 
@@ -64,7 +68,6 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .scrollDisabled(true)
     }
 }
 
@@ -78,11 +81,6 @@ struct SettingsView: View {
 private struct ModelCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("Available")
-                .font(.caption.weight(.medium))
-                .padding(.horizontal, 10)
-                .padding(.vertical, 4)
-                .background(Color.cream.opacity(0.08), in: .capsule)
             Text("Redact.")
                 .font(.system(size: 40, weight: .semibold))
                 .tracking(-2)
@@ -164,47 +162,6 @@ private struct Spec: View {
                 .font(.caption)
                 .foregroundStyle(Color.cream.opacity(0.65))
         }
-    }
-}
-
-private struct AllowlistEditor: View {
-    @Binding var values: [String]
-    @State private var draft = ""
-
-    var body: some View {
-        ForEach(values, id: \.self) { value in
-            HStack {
-                Text(value)
-                Spacer()
-                Button("Remove", systemImage: "minus.circle.fill") {
-                    values.removeAll { $0 == value }
-                }
-                .labelStyle(.iconOnly)
-                .buttonStyle(.borderless)
-                .foregroundStyle(.secondary)
-            }
-        }
-        HStack {
-            TextField("Add to whitelist", text: $draft, prompt: Text("Email, phone number, or name"))
-                .labelsHidden()
-                .textFieldStyle(.plain)
-                .onSubmit(add)
-            Button("Add", action: add)
-                .disabled(entries.isEmpty)
-        }
-    }
-
-    private var entries: [String] {
-        draft.split(separator: ",")
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { !$0.isEmpty }
-    }
-
-    private func add() {
-        for entry in entries where !values.contains(entry) {
-            values.append(entry)
-        }
-        draft = ""
     }
 }
 

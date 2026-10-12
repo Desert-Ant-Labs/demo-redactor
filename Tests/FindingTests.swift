@@ -1,3 +1,4 @@
+import Foundation
 import Redact
 import Testing
 
@@ -44,6 +45,19 @@ struct FindingTests {
         #expect(swept.text == "?authuser=sam%40example.com and [EMAIL_1]")
     }
 
+    @Test func leavesTurnedOffKindsAlone() {
+        let detection = Chunking.Detection(
+            items: [
+                .init(label: .givenName, original: "Anna", placeholder: "[GIVEN_NAME_1]"),
+                .init(label: .city, original: "Budapest", placeholder: "[CITY_1]"),
+            ],
+            redactedText: "[GIVEN_NAME_1] from [CITY_1], anna@example.hu"
+        )
+        let finding = Finding(detection, skipping: [.address, .email])
+        #expect(finding.redactedText == "[GIVEN_NAME_1] from Budapest, anna@example.hu")
+        #expect(finding.summary == "1 name")
+    }
+
     @Test func masksWithoutShowingTheValue() {
         #expect(Finding.mask("anna@example.hu") == "a•••@example.hu")
         #expect(Finding.mask("4111 1111 1111 1111") == "•••• 1111")
@@ -51,9 +65,11 @@ struct FindingTests {
     }
 
     @Test func watchesAgentAppsButNotTerminals() {
-        #expect(Watchlist.contains("com.anthropic.claudefordesktop"))
-        #expect(!Watchlist.contains("com.apple.Terminal"))
-        #expect(!Watchlist.contains(nil))
+        let file = URL(filePath: #filePath).deletingLastPathComponent().appending(path: "../App/Resources/app-watchlist.json")
+        let apps = AppList.load(file) ?? []
+        #expect(apps.contains("com.anthropic.claudefordesktop"))
+        #expect(apps.contains("com.apple.mail"))
+        #expect(!apps.contains("com.apple.Terminal"))
     }
 
     @Test func chunksCoverTheTextAtSentenceEnds() {

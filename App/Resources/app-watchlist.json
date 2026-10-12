@@ -1,0 +1,56 @@
+{
+  "AI and agents": {
+    "Claude": "com.anthropic.claudefordesktop",
+    "ChatGPT": "com.openai.chat",
+    "Cursor": "com.todesktop.230313mzl4w4u92",
+    "Perplexity": "ai.perplexity.mac"
+  },
+  "Browsers": {
+    "Safari": "com.apple.Safari",
+    "Safari Technology Preview": "com.apple.SafariTechnologyPreview",
+    "Google Chrome": "com.google.Chrome",
+    "Firefox": "org.mozilla.firefox",
+    "Arc": "company.thebrowser.Browser",
+    "Dia": "company.thebrowser.dia",
+    "Microsoft Edge": "com.microsoft.edgemac",
+    "Brave": "com.brave.Browser",
+    "Vivaldi": "com.vivaldi.Vivaldi",
+    "Opera": "com.operasoftware.Opera",
+    "Orion": "com.kagi.kagimacOS",
+    "Zen": "app.zen-browser.zen",
+    "Chromium": "org.chromium.Chromium"
+  },
+  "Email": {
+    "Mail": "com.apple.mail",
+    "Microsoft Outlook": "com.microsoft.Outlook",
+    "Spark": "com.readdle.SparkDesktop",
+    "Spark (App Store)": "com.readdle.SparkDesktop.appstore",
+    "Airmail": "it.bloop.airmail2",
+    "Superhuman": "com.superhuman.electron",
+    "Mimestream": "com.mimestream.Mimestream",
+    "Canary Mail": "io.canarymail.mac",
+    "Thunderbird": "org.mozilla.thunderbird",
+    "MailMate": "com.freron.MailMate",
+    "Proton Mail": "ch.protonmail.desktop"
+  },
+  "Chat and meetings": {
+    "Slack": "com.tinyspeck.slackmacgap",
+    "Microsoft Teams": "com.microsoft.teams2",
+    "Messages": "com.apple.MobileSMS",
+    "WhatsApp": "net.whatsapp.WhatsApp",
+    "Telegram": "ru.keepcoder.Telegram",
+    "Telegram Desktop": "org.telegram.desktop",
+    "Signal": "org.whispersystems.signal-desktop",
+    "Discord": "com.hnc.Discord",
+    "Zoom": "us.zoom.xos",
+    "Webex": "Cisco-Systems.Spark",
+    "Skype": "com.skype.skype",
+    "Element": "im.riot.app",
+    "Wire": "com.wire.macosx",
+    "Mattermost": "Mattermost.Desktop",
+    "Viber": "com.viber.osx",
+    "LINE": "jp.naver.line.mac",
+    "WeChat": "com.tencent.xinWeChat",
+    "Zulip": "org.zulip.zulip-electron"
+  }
+}

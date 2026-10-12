@@ -218,7 +218,11 @@ struct ClipboardCard: View {
         case .redacted: "Redacted"
         case .found, .approved: "Not redacted"
         case .failed: "Couldn't check"
-        case .skipped: scan?.contents == .image ? "Image not checked" : "Password, not read"
+        case .skipped:
+            if let source = scan?.ignoredSource { "Copied from \(source)" }
+            else if scan?.contents == .image { "Image not checked" }
+            else if case .files(let count) = scan?.contents { count == 1 ? "File not checked" : "Files not checked" }
+            else { "Password, not read" }
         case .clean: scan?.contents == .empty ? "Clipboard is empty" : "No personal data found"
         case nil: "Nothing copied yet"
         }
@@ -230,7 +234,7 @@ struct ClipboardCard: View {
         case .failed(let message): return message
         case .redacted(let finding), .found(let finding), .approved(let finding):
             return finding.files?.count == 1 ? finding.files?.first : finding.summary
-        case .skipped: return nil
+        case .skipped: return scan?.ignoredSource == nil ? nil : "Not checked"
         default: return contents(nil)
         }
     }

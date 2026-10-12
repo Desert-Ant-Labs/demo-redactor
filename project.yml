@@ -26,6 +26,8 @@ targets:
       - path: App/Sources
       - path: App/AppIcon.icon
       - path: App/Assets.xcassets
+      - path: App/Resources
+        buildPhase: resources
     dependencies:
       - package: DesertAntCore
         product: Redact
@@ -36,8 +38,8 @@ targets:
       properties:
         CFBundleDisplayName: Redactor
         NSHumanReadableCopyright: © 2026 Desert Ant Labs B.V. Redactor is MIT licensed. The models are under the Desert Ant Labs Source-Available License.
-        CFBundleShortVersionString: "1.0.0"
-        CFBundleVersion: "1"
+        CFBundleShortVersionString: "1.0.1"
+        CFBundleVersion: "2"
         LSMinimumSystemVersion: "26.0"
         LSApplicationCategoryType: public.app-category.utilities
         # A menu bar app: no Dock icon, and it never takes focus from the app

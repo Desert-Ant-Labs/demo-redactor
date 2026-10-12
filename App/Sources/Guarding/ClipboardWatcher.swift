@@ -43,6 +43,8 @@ struct ClipboardScan: Equatable, Sendable {
     let changeCount: Int
     let result: Result
     let contents: Contents
+    /// The app a copy came from, when it is on the ignore list.
+    var ignoredSource: String?
 }
 
 /// Polls the general pasteboard and scans each new text copy as soon as it
@@ -51,6 +53,8 @@ struct ClipboardScan: Equatable, Sendable {
 final class ClipboardWatcher {
     var onScan: (ClipboardScan) -> Void = { _ in }
     var checksImages = true
+    var checksFiles = true
+    var ignoredApps: Set<String> = []
     private(set) var latest: ClipboardScan?
 
     private let pasteboard: NSPasteboard
@@ -85,6 +89,12 @@ final class ClipboardWatcher {
             publish(ClipboardScan(changeCount: count, result: .skipped, contents: .other))
             return
         }
+        // The app in front a moment after the copy is the one it came from.
+        if let source = NSWorkspace.shared.frontmostApplication,
+           let id = source.bundleIdentifier, ignoredApps.contains(id) {
+            publish(ClipboardScan(changeCount: count, result: .skipped, contents: .other, ignoredSource: source.localizedName ?? id))
+            return
+        }
         let contents = ClipboardScan.Contents(pasteboard)
         if let image = Self.copiedImage(on: pasteboard) {
             if checksImages {
@@ -95,6 +105,10 @@ final class ClipboardWatcher {
             return
         }
         if let files = Self.copiedFiles(on: pasteboard) {
+            guard checksFiles else {
+                publish(ClipboardScan(changeCount: count, result: .skipped, contents: contents))
+                return
+            }
             startScan(count, contents) {
                 let text = await TextExtraction.text(of: files)
                 return (text, files.map(\.lastPathComponent))
