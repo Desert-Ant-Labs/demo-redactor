@@ -1,6 +1,7 @@
 import AppKit
 import Observation
 import Redact
+import ServiceManagement
 
 @MainActor
 @Observable
@@ -163,7 +164,27 @@ final class RedactorModel {
             let pid = app?.processIdentifier
             MainActor.assumeIsolated { self?.appActivated(pid) }
         }
-        if !hasAccessibility { requestAccessibility() }
+        // After launch finishes, so the alert can show.
+        Task {
+            offerOpenAtLogin()
+            if !hasAccessibility { requestAccessibility() }
+        }
+    }
+
+    /// Asked once: Redactor only checks the clipboard while it runs.
+    private func offerOpenAtLogin() {
+        let key = "askedOpenAtLogin"
+        guard !UserDefaults.standard.bool(forKey: key), SMAppService.mainApp.status != .enabled else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        let alert = NSAlert()
+        alert.messageText = "Open Redactor at login?"
+        alert.informativeText = "Redactor only checks what you copy while it runs. You can change this in Settings."
+        alert.addButton(withTitle: "Open at Login")
+        alert.addButton(withTitle: "Not Now")
+        NSApp.activate()
+        if alert.runModal() == .alertFirstButtonReturn {
+            try? SMAppService.mainApp.register()
+        }
     }
 
     private func loadModel() async {

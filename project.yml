@@ -38,8 +38,8 @@ targets:
       properties:
         CFBundleDisplayName: Redactor
         NSHumanReadableCopyright: © 2026 Desert Ant Labs B.V. Redactor is MIT licensed. The models are under the Desert Ant Labs Source-Available License.
-        CFBundleShortVersionString: "1.0.1"
-        CFBundleVersion: "2"
+        CFBundleShortVersionString: "1.0.2"
+        CFBundleVersion: "3"
         LSMinimumSystemVersion: "26.0"
         LSApplicationCategoryType: public.app-category.utilities
         # A menu bar app: no Dock icon, and it never takes focus from the app

@@ -1,4 +1,5 @@
 import AppKit
+import ServiceManagement
 import SwiftUI
 
 struct SettingsView: View {
@@ -58,6 +59,7 @@ struct SettingsView: View {
             }
 
             Section {
+                OpenAtLoginToggle()
                 LabeledContent("Version", value: Bundle.main.version)
                 LabeledContent("Source") {
                     Link("github.com/Desert-Ant-Labs/demo-redactor", destination: URL(string: "https://github.com/Desert-Ant-Labs/demo-redactor")!)
@@ -162,6 +164,24 @@ private struct Spec: View {
                 .font(.caption)
                 .foregroundStyle(Color.cream.opacity(0.65))
         }
+    }
+}
+
+/// Reads the login item from macOS each time Settings opens, since it can
+/// also be turned off in System Settings > General > Login Items.
+private struct OpenAtLoginToggle: View {
+    @State private var isOn = SMAppService.mainApp.status == .enabled
+
+    var body: some View {
+        Toggle("Open at login", isOn: $isOn)
+            .onAppear { isOn = SMAppService.mainApp.status == .enabled }
+            .onChange(of: isOn) {
+                do {
+                    if isOn { try SMAppService.mainApp.register() } else { try SMAppService.mainApp.unregister() }
+                } catch {
+                    isOn = SMAppService.mainApp.status == .enabled
+                }
+            }
     }
 }
 

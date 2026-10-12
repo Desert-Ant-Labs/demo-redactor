@@ -57,6 +57,10 @@ Silicon. Redact (12MB) downloads on first launch.
 - **Watchlist**: the apps where Redactor checks what you paste. The defaults
   are in [`App/Resources/app-watchlist.json`](App/Resources/app-watchlist.json).
 
+### General
+
+- **Open at login**: start Redactor when you log in to your Mac.
+
 ## Permissions
 
 - **Accessibility**, to stop a paste.
