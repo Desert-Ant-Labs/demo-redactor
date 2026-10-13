@@ -1,8 +1,10 @@
+<img src="docs/banner.png" width="1280" alt="Redactor for Mac: Personal data, gone before you paste.">
+
 # Redactor
 
-Redact personal data when you copy or paste on your Mac, before it reaches a
-chat, AI, or email app. Redactor runs [Redact](https://desertant.com/models/redact/)
-on your Mac, so nothing you copy leaves it.
+Redact personal data when you copy or paste on your Mac, so it doesn't end up
+in chats, agents, or email. The [Redact](https://desertant.com/models/redact/)
+model runs on your Mac, and nothing you copy leaves it.
 
 <img src="docs/screenshots/pill-redacted.png" width="638" alt="The Redactor pill after a copy: Redacted 1 name, 1 email, and 1 phone number">
 
