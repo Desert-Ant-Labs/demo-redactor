@@ -64,7 +64,7 @@ Silicon. Redact (12MB) downloads on first launch.
 - **Open at login**: start Redactor when you log in to your Mac.
 - **Check for updates automatically**: look for a new release once a day with
   [Sparkle](https://sparkle-project.org), and ask before installing it. Check
-  for Updates in the menu checks right away. An update installs only when it
+  for Updates in Settings checks right away. An update installs only when it
   is signed with the Desert Ant Labs key.
 
 ## Permissions

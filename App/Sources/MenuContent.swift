@@ -306,7 +306,6 @@ private struct Footer: View {
                 openSettings()
             }
             .keyboardShortcut(",")
-            Button("Check for Updates…") { Updates.shared.check() }
             Spacer()
             Button("Quit") { NSApp.terminate(nil) }
                 .keyboardShortcut("q")
