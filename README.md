@@ -35,7 +35,7 @@ Silicon. Redact (12MB) downloads on first launch.
 - **Copy a file** in Finder, and Redactor reads it: text, CSV, Word, PDF, and
   images. A file stays a file until you click Redact.
 
-<img src="docs/screenshots/menu.png" width="366" alt="The Redactor menu with the Redact, Warn, and Off switch">
+<img src="docs/screenshots/menu.png" width="320" alt="The Redactor menu with the Redact, Warn, and Off switch">
 
 ## Settings
 
