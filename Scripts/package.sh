@@ -118,8 +118,8 @@ rm -f "$DMG"
 hdiutil create -volname "$APP_NAME" -srcfolder "$STAGE" \
     -ov -format UDZO "$DMG" >/dev/null
 
-# Sparkle's feed, signed with the desert-ant-labs key in the login keychain.
-# Attach it to the release with the disk image.
+# Sparkle's feed, signed with the key that SPARKLE_KEY_COMMAND prints, or else
+# the one in the login keychain. Attach it to the release with the image.
 GENERATE_APPCAST=$(find build ~/Library/Developer/Xcode/DerivedData \
     -path "*/sparkle/Sparkle/bin/generate_appcast" 2>/dev/null | head -1)
 rm -f "$DIST_DIR/appcast.xml"
@@ -128,10 +128,15 @@ if [ -n "$GENERATE_APPCAST" ] && [ -n "$SIGNING" ]; then
     FEED=$(mktemp -d)
     cp "$DMG" "$FEED/"
     RELEASE="https://github.com/Desert-Ant-Labs/demo-$(echo "$APP_NAME" | tr '[:upper:]' '[:lower:]')/releases"
-    "$GENERATE_APPCAST" --account desert-ant-labs \
-        --download-url-prefix "$RELEASE/download/v$VERSION/" \
-        --full-release-notes-url "$RELEASE/tag/v$VERSION" \
-        -o "$DIST_DIR/appcast.xml" "$FEED" >/dev/null
+    APPCAST=(--download-url-prefix "$RELEASE/download/v$VERSION/"
+             --full-release-notes-url "$RELEASE/tag/v$VERSION"
+             -o "$DIST_DIR/appcast.xml" "$FEED")
+    if [ -n "${SPARKLE_KEY_COMMAND:-}" ] && KEY=$(eval "$SPARKLE_KEY_COMMAND"); then
+        printf '%s' "$KEY" | "$GENERATE_APPCAST" --ed-key-file - "${APPCAST[@]}" >/dev/null
+        unset KEY
+    else
+        "$GENERATE_APPCAST" --account desert-ant-labs "${APPCAST[@]}" >/dev/null
+    fi
     rm -rf "$FEED"
 fi
 

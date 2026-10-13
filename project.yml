@@ -49,7 +49,6 @@ targets:
         # A menu bar app: no Dock icon, and it never takes focus from the app
         # being pasted into.
         LSUIElement: true
-        # The private half of SUPublicEDKey is in the shared 1Password vault.
         SUFeedURL: https://github.com/Desert-Ant-Labs/demo-redactor/releases/latest/download/appcast.xml
         SUPublicEDKey: W6J9bh7OT4fjiPjLiH3CjXMsEUK5esRKVZ/3d/hO6dY=
         SUEnableAutomaticChecks: true
