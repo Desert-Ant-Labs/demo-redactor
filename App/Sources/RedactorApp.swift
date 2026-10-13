@@ -4,6 +4,10 @@ import SwiftUI
 struct RedactorApp: App {
     @State private var model = RedactorModel()
 
+    init() {
+        _ = Updates.shared
+    }
+
     var body: some Scene {
         MenuBarExtra {
             MenuContent(model: model)

@@ -60,7 +60,13 @@ struct SettingsView: View {
 
             Section {
                 OpenAtLoginToggle()
-                LabeledContent("Version", value: Bundle.main.version)
+                AutomaticUpdatesToggle()
+                LabeledContent("Version") {
+                    HStack(spacing: 10) {
+                        Text(Bundle.main.version)
+                        Button("Check for Updates…") { Updates.shared.check() }
+                    }
+                }
                 LabeledContent("Source") {
                     Link("github.com/Desert-Ant-Labs/demo-redactor", destination: URL(string: "https://github.com/Desert-Ant-Labs/demo-redactor")!)
                 }

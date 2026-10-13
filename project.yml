@@ -11,6 +11,9 @@ settings:
     ONLY_ACTIVE_ARCH: "NO"
 
 packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle.git
+    from: 2.10.0
   DesertAntCore:
     url: https://github.com/Desert-Ant-Labs/desert-ant-core.git
     from: 3.6.0
@@ -33,18 +36,23 @@ targets:
         product: Redact
       - package: DesertAntSwift
         product: DesertAntUI
+      - package: Sparkle
     info:
       path: App/Info.plist
       properties:
         CFBundleDisplayName: Redactor
         NSHumanReadableCopyright: © 2026 Desert Ant Labs B.V. Redactor is MIT licensed. The models are under the Desert Ant Labs Source-Available License.
-        CFBundleShortVersionString: "1.0.2"
-        CFBundleVersion: "3"
+        CFBundleShortVersionString: "1.0.3"
+        CFBundleVersion: "4"
         LSMinimumSystemVersion: "26.0"
         LSApplicationCategoryType: public.app-category.utilities
         # A menu bar app: no Dock icon, and it never takes focus from the app
         # being pasted into.
         LSUIElement: true
+        # The private half of SUPublicEDKey is in the shared 1Password vault.
+        SUFeedURL: https://github.com/Desert-Ant-Labs/demo-redactor/releases/latest/download/appcast.xml
+        SUPublicEDKey: W6J9bh7OT4fjiPjLiH3CjXMsEUK5esRKVZ/3d/hO6dY=
+        SUEnableAutomaticChecks: true
     settings:
       base:
         MACOSX_DEPLOYMENT_TARGET: "26.0"
