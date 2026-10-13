@@ -147,6 +147,7 @@ struct Finding: Equatable, Sendable {
         let hasAddress = redaction.items.contains { [.streetName, .city].contains($0.label) }
         for item in redaction.items {
             if allowlist.allows(item.original, as: item.label) || Self.isCode(item, hasAddress: hasAddress)
+                || !item.original.contains(where: { $0.isLetter || $0.isNumber })
                 || Kind(item.label).map(skipped.contains) == true {
                 text = text.replacingOccurrences(of: item.placeholder, with: item.original)
             } else {

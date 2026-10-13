@@ -58,7 +58,17 @@ struct FindingTests {
         #expect(finding.summary == "1 name")
     }
 
-    @Test func masksWithoutShowingTheValue() {
+    @Test func leavesSymbolsAlone() {
+        let detection = Chunking.Detection(
+            items: [.init(label: .givenName, original: "✲", placeholder: "[GIVEN_NAME_1]")],
+            redactedText: "[GIVEN_NAME_1]"
+        )
+        let finding = Finding(detection)
+        #expect(finding.isEmpty)
+        #expect(finding.redactedText == "✲")
+    }
+
+        @Test func masksWithoutShowingTheValue() {
         #expect(Finding.mask("anna@example.hu") == "a•••@example.hu")
         #expect(Finding.mask("4111 1111 1111 1111") == "•••• 1111")
         #expect(Finding.mask("Kovács") == "K•••")

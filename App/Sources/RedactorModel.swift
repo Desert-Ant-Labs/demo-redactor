@@ -166,6 +166,7 @@ final class RedactorModel {
         }
         // After launch finishes, so the alert can show.
         Task {
+            if MoveToApplications.offer() { return }
             offerOpenAtLogin()
             if !hasAccessibility { requestAccessibility() }
         }
