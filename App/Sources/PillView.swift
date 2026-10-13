@@ -83,7 +83,7 @@ private struct SwitchButton: View {
         Button {
             choose(!isRedacted)
         } label: {
-            HStack(spacing: 8) {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
                 Steady(isFirst: isRedacted, alignment: .center) {
                     Text("Unredact")
                 } second: {
