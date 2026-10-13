@@ -74,8 +74,7 @@ esac
 
 [ -d "$APP" ] || { echo "No app at $APP"; exit 1; }
 
-# Xcode re-signs Sparkle.framework but not the helpers inside it, and the
-# notary service rejects those. Inside out, then the app around them.
+# Sparkle's helpers need our signature for notarization.
 SPARKLE="$APP/Contents/Frameworks/Sparkle.framework"
 if [ -d "$SPARKLE" ] && [ -n "$IDENTITY" ] && ! xcrun stapler validate "$APP" >/dev/null 2>&1; then
     SIGN=(codesign -f -s "$IDENTITY" -o runtime --timestamp)
@@ -118,8 +117,7 @@ rm -f "$DMG"
 hdiutil create -volname "$APP_NAME" -srcfolder "$STAGE" \
     -ov -format UDZO "$DMG" >/dev/null
 
-# Sparkle's feed, signed with the key that SPARKLE_KEY_COMMAND prints, or else
-# the one in the login keychain. Attach it to the release with the image.
+# The appcast, signed with SPARKLE_KEY_COMMAND's key or the login keychain's.
 GENERATE_APPCAST=$(find build ~/Library/Developer/Xcode/DerivedData \
     -path "*/sparkle/Sparkle/bin/generate_appcast" 2>/dev/null | head -1)
 rm -f "$DIST_DIR/appcast.xml"
@@ -127,7 +125,7 @@ if [ -n "$GENERATE_APPCAST" ] && [ -n "$SIGNING" ]; then
     echo "==> Writing the appcast"
     FEED=$(mktemp -d)
     cp "$DMG" "$FEED/"
-    RELEASE="https://github.com/Desert-Ant-Labs/demo-$(echo "$APP_NAME" | tr '[:upper:]' '[:lower:]')/releases"
+    RELEASE="https://github.com/Desert-Ant-Labs/demo-redactor/releases"
     APPCAST=(--download-url-prefix "$RELEASE/download/v$VERSION/"
              --full-release-notes-url "$RELEASE/tag/v$VERSION"
              -o "$DIST_DIR/appcast.xml" "$FEED")
