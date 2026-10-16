@@ -4,11 +4,19 @@
 
 Redact personal data when you copy or paste on your Mac, so it doesn't end up
 in chats, agents, or email. The [Redact](https://desertant.com/models/redact/)
-model runs on your Mac, and nothing you copy leaves it.
+model runs on your Mac, and nothing you copy leaves it. Download the
+[latest release](https://github.com/Desert-Ant-Labs/demo-redactor/releases/latest)
+for macOS 26 or later on Apple Silicon.
 
 <img src="docs/screenshots/pill-redacted.png" width="638" alt="The Redactor pill after a copy: Redacted 1 name, 1 email, and 1 phone number">
 
 ## Install
+
+Download the [disk image](https://github.com/Desert-Ant-Labs/demo-redactor/releases/latest),
+open it, and drag Redactor to Applications. Redactor works on macOS 26 or later
+on Apple Silicon. Redact (12MB) downloads on first launch.
+
+Or install Redactor with Homebrew:
 
 ```bash
 brew tap desert-ant-labs/tap
@@ -18,10 +26,6 @@ brew install --cask redactor
 Homebrew 6 asks you to approve a tap when you add it first. Answering that
 prompt covers Redactor, and `brew trust desert-ant-labs/tap` covers
 anything Desert Ant publishes later.
-
-Or download the [disk image](https://github.com/Desert-Ant-Labs/demo-redactor/releases/latest)
-and drag Redactor to Applications. Redactor works on macOS 26 or later on Apple
-Silicon. Redact (12MB) downloads on first launch.
 
 ## How it works
 
