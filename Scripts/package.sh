@@ -11,7 +11,7 @@
 # plainly what it did when it is not, because an unnotarized app is something
 # the person receiving it has to work around.
 #
-#   NOTARY_PROFILE=redactor Scripts/package.sh …
+#   NOTARY_PROFILE=desertant Scripts/package.sh …
 #
 set -euo pipefail
 
