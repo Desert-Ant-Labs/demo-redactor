@@ -16,7 +16,7 @@ packages:
     from: 2.10.0
   DesertAntCore:
     url: https://github.com/Desert-Ant-Labs/desert-ant-core.git
-    from: 3.6.0
+    from: 6.0.0
   DesertAntSwift:
     url: https://github.com/Desert-Ant-Labs/desert-ant-swift.git
     from: 2.1.3
@@ -25,6 +25,9 @@ targets:
   Redactor:
     type: application
     platform: macOS
+    configFiles:
+      Debug: Config.xcconfig
+      Release: Config.xcconfig
     sources:
       - path: App/Sources
       - path: App/AppIcon.icon
@@ -34,6 +37,8 @@ targets:
     dependencies:
       - package: DesertAntCore
         product: Redact
+      - package: DesertAntCore
+        product: DesertAnt
       - package: DesertAntSwift
         product: DesertAntUI
       - package: Sparkle
@@ -42,8 +47,8 @@ targets:
       properties:
         CFBundleDisplayName: Redactor
         NSHumanReadableCopyright: © 2026 Desert Ant Labs B.V. Redactor is MIT licensed. The models are under the Desert Ant Labs Source-Available License.
-        CFBundleShortVersionString: "1.0.7"
-        CFBundleVersion: "8"
+        CFBundleShortVersionString: "1.0.8"
+        CFBundleVersion: "9"
         LSMinimumSystemVersion: "26.0"
         LSApplicationCategoryType: public.app-category.utilities
         # A menu bar app: no Dock icon, and it never takes focus from the app
@@ -52,6 +57,7 @@ targets:
         SUFeedURL: https://github.com/Desert-Ant-Labs/demo-redactor/releases/latest/download/appcast.xml
         SUPublicEDKey: W6J9bh7OT4fjiPjLiH3CjXMsEUK5esRKVZ/3d/hO6dY=
         SUEnableAutomaticChecks: true
+        DAL_API_KEY: $(DAL_API_KEY)
     settings:
       base:
         MACOSX_DEPLOYMENT_TARGET: "26.0"
