@@ -106,4 +106,4 @@ Accessibility again after every build. The other tasks are `build`, `test`,
 
 The Redactor source is MIT ([`LICENSE`](LICENSE)), and
 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) covers the rest. Redact is
-under the [Desert Ant Labs Source-Available License](https://license.desertant.com/1.0).
+under the [Desert Ant Labs Source-Available License](https://license.desertant.com/).
