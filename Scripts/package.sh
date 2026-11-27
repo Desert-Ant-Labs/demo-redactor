@@ -100,6 +100,12 @@ if [ -d "$SPARKLE" ] && [ -n "$IDENTITY" ] && ! xcrun stapler validate "$APP" >/
 fi
 
 VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "$APP/Contents/Info.plist")
+
+# A release without the key runs the models unlicensed.
+if [ -n "$IDENTITY" ] && [ -z "$(/usr/libexec/PlistBuddy -c "Print DAL_API_KEY" "$APP/Contents/Info.plist" 2>/dev/null)" ]; then
+    echo "The app has no DAL_API_KEY. Put the key in Secrets.xcconfig and build again."
+    exit 1
+fi
 DMG="$DIST_DIR/$APP_NAME-$VERSION.dmg"
 
 # Captured rather than tested through a pipe. `grep -q` exits on its first

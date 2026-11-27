@@ -6,3 +6,4 @@ build*/
 .swiftpm/
 dist/
 mise.local.toml
+Secrets.xcconfig
